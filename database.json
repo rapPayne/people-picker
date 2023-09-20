@@ -1,0 +1,164 @@
+{
+  "people": [
+    {
+      "id": 1,
+      "first": "Andy",
+      "last": "Lee",
+      "age": 32,
+      "email": "andy.lee@example.com",
+      "phone": "+1 (555) 123-4567"
+    },
+    {
+      "id": 2,
+      "first": "Demetrio",
+      "last": "Gutierrez Finely",
+      "age": 28,
+      "email": "demetrio.gutierrez@example.com",
+      "phone": "+1 (555) 234-5678"
+    },
+    {
+      "id": 3,
+      "first": "Callista",
+      "last": "Carns",
+      "age": 34,
+      "email": "callista.carns@example.com",
+      "phone": "+1 (555) 345-6789"
+    },
+    {
+      "id": 4,
+      "first": "Jake",
+      "last": "VanDuyn",
+      "age": 29,
+      "email": "jake.vanduyn@example.com",
+      "phone": "+1 (555) 456-7890"
+    },
+    {
+      "id": 5,
+      "first": "Alex",
+      "last": "Stone",
+      "age": 27,
+      "email": "alex.stone@example.com",
+      "phone": "+1 (555) 567-8901"
+    },
+    {
+      "id": 6,
+      "first": "Malik",
+      "last": "Elate",
+      "age": 31,
+      "email": "malik.elate@example.com",
+      "phone": "+1 (555) 678-9012"
+    },
+    {
+      "id": 7,
+      "first": "Sully",
+      "last": "Jimenez",
+      "age": 33,
+      "email": "sully.jimenez@example.com",
+      "phone": "+1 (555) 789-0123"
+    },
+    {
+      "id": 8,
+      "first": "Halley",
+      "last": "Bennett",
+      "age": 30,
+      "email": "halley.bennett@example.com",
+      "phone": "+1 (555) 890-1234"
+    },
+    {
+      "id": 9,
+      "first": "Benton",
+      "last": "Snodgrass",
+      "age": 35,
+      "email": "benton.snodgrass@example.com",
+      "phone": "+1 (555) 901-2345"
+    },
+    {
+      "id": 10,
+      "first": "Christopher",
+      "last": "Rances",
+      "age": 26,
+      "email": "christopher.rances@example.com",
+      "phone": "+1 (555) 012-3456"
+    },
+    {
+      "id": 11,
+      "first": "Christian",
+      "last": "Smith",
+      "age": 28,
+      "email": "christian.smith@example.com",
+      "phone": "+1 (555) 123-4567"
+    },
+    {
+      "id": 12,
+      "first": "Kemin",
+      "last": "Jiang-Liu",
+      "age": 29,
+      "email": "kemin.jiang@example.com",
+      "phone": "+1 (555) 234-5678"
+    },
+    {
+      "id": 13,
+      "first": "Elijah",
+      "last": "Rodriguez",
+      "age": 32,
+      "email": "elijah.rodriguez@example.com",
+      "phone": "+1 (555) 345-6789"
+    },
+    {
+      "id": 14,
+      "first": "Rahul",
+      "last": "Kiefer",
+      "age": 31,
+      "email": "rahul.kiefer@example.com",
+      "phone": "+1 (555) 456-7890"
+    },
+    {
+      "id": 15,
+      "first": "Annabelle",
+      "last": "Strong",
+      "age": 27,
+      "email": "annabelle.strong@example.com",
+      "phone": "+1 (555) 567-8901"
+    },
+    {
+      "id": 16,
+      "first": "Owen",
+      "last": "Arone",
+      "age": 33,
+      "email": "owen.arone@example.com",
+      "phone": "+1 (555) 678-9012"
+    },
+    {
+      "id": 17,
+      "first": "Jacob",
+      "last": "Sifodaskalakis",
+      "age": 34,
+      "email": "jacob.sifodaskalakis@example.com",
+      "phone": "+1 (555) 789-0123"
+    },
+    {
+      "id": 18,
+      "first": "Nadia",
+      "last": "Magnuson",
+      "age": 30,
+      "email": "nadia.magnuson@example.com",
+      "phone": "+1 (555) 890-1234"
+    },
+    {
+      "id": 19,
+      "first": "Marwan",
+      "last": "Youssef",
+      "age": 28,
+      "email": "marwan.youssef@example.com",
+      "phone": "+1 (555) 901-2345"
+    },
+    {
+      "id": 20,
+      "first": "Samad",
+      "last": "Ahmad",
+      "age": 29,
+      "email": "samad.ahmad@example.com",
+      "phone": "+1 (555) 012-3456"
+    }
+  ]
+}
