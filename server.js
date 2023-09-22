@@ -25,7 +25,9 @@ const getRandomPerson = () => {
   }
   let currentPerson = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)]
   unchosenPeople = unchosenPeople.filter(p => p !== currentPerson);
-  chosenPeople = [...chosenPeople, currentPerson];
+  //handle our stash thing... 
+  if (!stashed.contains(currentPerson)){
+      {chosenPeople = [...chosenPeople, currentPerson];}
   return currentPerson;
 }
 
