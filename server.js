@@ -8,6 +8,7 @@ const getPersonById = id => {
   return getAllPeople().find(person => person.id === +id)
 }
 let chosenPeople = []
+let stashed = []
 let unchosenPeople = [...getAllPeople()]
 /**
  * Selects a random person from the unchosenPeople, removes them from 
@@ -15,6 +16,13 @@ let unchosenPeople = [...getAllPeople()]
  * @returns The current/chosen random person
  */
 const getRandomPerson = () => {
+
+  //this conditional handles the stashed array
+  //once unchosen is empty, it will move on to "stashed"
+  //as long as there are people in the stashed array
+  if (!unchosenPeople.length && stashed.length){
+      unchosenPeople = stashed; 
+  }
   let currentPerson = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)]
   unchosenPeople = unchosenPeople.filter(p => p !== currentPerson);
   chosenPeople = [...chosenPeople, currentPerson];
@@ -33,7 +41,9 @@ app.get('/people/chosen', (req, res) => {
   res.send(chosenPeople);
 })
 app.get('/people/unchosen', (req, res) => {
-  res.send(unchosenPeople);
+  //combines unchosen and stashed people so user just sees unchosen
+  let allUnchosenPeople = [...unchosenPeople, ...stashed]
+  res.send(allUnchosenPeople);
 })
 /**
  * Basically starts over.
@@ -51,6 +61,14 @@ app.post('/people/getRandom', (req, res) => {
   const currentPerson = getRandomPerson();
   console.log(currentPerson)
   res.send(currentPerson)
+})
+
+//this is the endpoint that will handle our stashed person
+app.post('/people/stash', (req, res) => {
+  console.log(req.body);
+  let stashedPerson = unchosenPeople.filter(p => p.id == req.body);
+  unchosenPeople = unchosenPeople.filter(p => p.id !== req.body);
+  stashed.push(stashedPerson);
 })
 
 app.get('/people/:id', (req, res) => {

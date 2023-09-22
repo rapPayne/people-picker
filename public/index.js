@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   currentPersonSection = document.querySelector('section#current-person')
   let pickAPersonButton = document.querySelector('button#pick-a-person')
   let resetButton = document.querySelector('button#reset')
+  let stashButton = document.querySelector('button#stash');
 
   pickAPersonButton.addEventListener('click', () => fetchRandomPerson())
   resetButton.addEventListener('click', () => reset())
+  stashButton.addEventListener('click',() => stashPerson());
   refreshChosenPeople();
   refreshUnchosenPeople();
 
@@ -30,6 +32,7 @@ const fetchRandomPerson = async () => {
     .then(res => { if (!res.ok) throw res.status; return res })
     .then(res => res.json())
     .catch(err => console.error("Error fetching random person", err))
+  currentPersonSection.dataset.id = currentPerson.id;
   currentPersonSection.innerHTML = makeOnePersonSection(currentPerson);
   refreshChosenPeople()
   refreshUnchosenPeople()
@@ -54,6 +57,22 @@ const refreshUnchosenPeople = async () => {
   const people = await fetchUnchosenPeople();
   const html = people.reduce((html, p) => html += makeOnePersonSection(p), "")
   unchosenPeopleSection.innerHTML = html;
+}
+
+const stashPerson = async () => {
+    if (!thereIsACurrentPerson()){
+      alert("No person selected to stash!");
+    }
+
+  //to-do 
+  //hit api endpoint (to be created) that addes this person to stashed array
+    await fetch('/people/stash', {method: 'POST', body: currentPersonSection.dataset.id})
+    .then(res => { if (!res.ok) throw res.status; return res });
+    fetchRandomPerson();
+}
+
+const thereIsACurrentPerson = () => {
+  return currentPersonSection.dataset.id != "";
 }
 
 const makeOnePersonSection = (person) => `
