@@ -7,18 +7,34 @@ const getAllPeople = () => {
 const getPersonById = id => {
   return getAllPeople().find(person => person.id === +id)
 }
+let personInSpotlight
 let chosenPeople = []
 let unchosenPeople = [...getAllPeople()]
+let peopleToRevisit = []
 /**
  * Selects a random person from the unchosenPeople, removes them from 
  * unchosenPeople, and adds them to chosenPeople.
  * @returns The current/chosen random person
  */
 const getRandomPerson = () => {
-  let currentPerson = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)]
-  unchosenPeople = unchosenPeople.filter(p => p !== currentPerson);
-  chosenPeople = [...chosenPeople, currentPerson];
-  return currentPerson;
+  if (personInSpotlight) {
+    chosenPeople = [...chosenPeople, personInSpotlight];
+  }
+  personInSpotlight = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)]
+  unchosenPeople = unchosenPeople.filter(p => p !== personInSpotlight);
+  return personInSpotlight;
+}
+const addPersonToRevisitList = () => {
+  peopleToRevisit = [...peopleToRevisit, personInSpotlight]
+  personInSpotlight = undefined
+}
+const getNextPerson = () => {
+  if(unchosenPeople.length){
+    return getRandomPerson();
+  }
+  const nextPersonToRevisit = peopleToRevisit[0];
+  peopleToRevisit.shift();
+  return nextPersonToRevisit;
 }
 
 
@@ -35,6 +51,9 @@ app.get('/people/chosen', (req, res) => {
 app.get('/people/unchosen', (req, res) => {
   res.send(unchosenPeople);
 })
+app.get('/people/revisit', (req, res) => {
+  res.send(peopleToRevisit);
+})
 /**
  * Basically starts over.
  * Resets chosenPeople to empty. Resets unchosenPeople to all people.
@@ -42,18 +61,36 @@ app.get('/people/unchosen', (req, res) => {
 app.post('/people/reset', (req, res) => {
   chosenPeople = [];
   unchosenPeople = [...getAllPeople()];
+  peopleToRevisit = [];
   res.sendStatus(204); // No content.
 })
 /**
- * Calls getRandomPerson(). Notice that it changes chosenPeople and unchosenPeople
+ * Calls getRandomPerson(). Notice that it changes personInSpotlight, chosenPeople, and unchosenPeople
  */
-app.post('/people/getRandom', (req, res) => {
-  const currentPerson = getRandomPerson();
+app.post('/people/getNextPerson', (req, res) => {
+  const currentPerson = getNextPerson();
   console.log(currentPerson)
   res.send(currentPerson)
 })
+/**
+ * Calls addPersonToRevisitList(). Notice that it changes personInSpotlight and peopleToRevisit
+ */
+app.post('/person/revisit', (req, res) => {
+  if (!personInSpotlight) {
+    res.status(400).send('There is no one in the spotlight to revisit.')
+  } else {
+    console.log(`Revisit ${personInSpotlight} at the end.`);
+    addPersonToRevisitList();
+    res.sendStatus(204); // No content.
+  }
+})
 
-app.get('/people/:id', (req, res) => {
+app.get('/person/getpersonInSpotlight', (req, res) => {
+  console.log(personInSpotlight)
+  res.send(personInSpotlight)
+})
+
+app.get('/person/:id', (req, res) => {
   const { id } = req.params;
   const person = getPersonById(id);
   if (!person)
