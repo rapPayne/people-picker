@@ -9,17 +9,26 @@ const getPersonById = id => {
 }
 let chosenPeople = []
 let unchosenPeople = [...getAllPeople()]
+let pickedPeople = [];
+
 /**
  * Selects a random person from the unchosenPeople, removes them from 
  * unchosenPeople, and adds them to chosenPeople.
  * @returns The current/chosen random person
  */
 const getRandomPerson = () => {
-  let currentPerson = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)]
+  if(unchosenPeople.length === 0) {
+    unchosenPeople = [...pickedPeople];
+    pickedPeople = [];
+  }
+
+  let currentPerson = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)];
   unchosenPeople = unchosenPeople.filter(p => p !== currentPerson);
+  pickedPeople = [...pickedPeople, currentPerson];
   chosenPeople = [...chosenPeople, currentPerson];
   return currentPerson;
-}
+};
+
 
 
 const port = 3001;
