@@ -32,8 +32,7 @@ const getNextPerson = () => {
   if(unchosenPeople.length){
     return getRandomPerson();
   }
-  const nextPersonToRevisit = peopleToRevisit[0];
-  peopleToRevisit.shift();
+  const nextPersonToRevisit = peopleToRevisit.shift();
   return nextPersonToRevisit;
 }
 
@@ -76,6 +75,7 @@ app.post('/people/getNextPerson', (req, res) => {
  * Calls addPersonToRevisitList(). Notice that it changes personInSpotlight and peopleToRevisit
  */
 app.post('/person/revisit', (req, res) => {
+  //Revisit move the person in the spotlight to the revist list but will not assign the next person to the spotlight so it is possible that the spotlight is empty.
   if (!personInSpotlight) {
     res.status(400).send('There is no one in the spotlight to revisit.')
   } else {
@@ -90,7 +90,7 @@ app.get('/person/getpersonInSpotlight', (req, res) => {
   res.send(personInSpotlight)
 })
 
-app.get('/person/:id', (req, res) => {
+app.get('/people/:id', (req, res) => {
   const { id } = req.params;
   const person = getPersonById(id);
   if (!person)
