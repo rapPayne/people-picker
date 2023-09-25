@@ -1,43 +1,60 @@
 let chosenPeopleSection
 let unchosenPeopleSection
+let peopleToRevisitSection
 let currentPersonSection
-
 
 document.addEventListener('DOMContentLoaded', async () => {
   chosenPeopleSection = document.querySelector('section#chosen-people')
   unchosenPeopleSection = document.querySelector('section#unchosen-people')
+  peopleToRevisitSection = document.querySelector('section#people-to-revisit')
   currentPersonSection = document.querySelector('section#current-person')
   let pickAPersonButton = document.querySelector('button#pick-a-person')
+  let revisitButton = document.querySelector('button#revisit')
   let resetButton = document.querySelector('button#reset')
 
-  pickAPersonButton.addEventListener('click', () => fetchRandomPerson())
+  pickAPersonButton.addEventListener('click', () => fetchNextPerson())
+  revisitButton.addEventListener('click', () => revisitPersonLater())
   resetButton.addEventListener('click', () => reset())
   refreshChosenPeople();
   refreshUnchosenPeople();
-
+  refreshPeopleToRevisit();
 })
 
 const reset = async () => {
   await fetch('/people/reset', { method: 'POST' })
     .then(res => { if (!res.ok) throw res.status; return res })
-    .then(res => res.json())
     .catch(err => console.error("Error resetting the lists", err))
   refreshChosenPeople()
   refreshUnchosenPeople()
+  refreshPeopleToRevisit()
 }
-const fetchRandomPerson = async () => {
-  const currentPerson = await fetch('/people/getRandom', { method: 'POST' })
+const fetchNextPerson = async () => {
+  const currentPerson = await fetch('/people/getNextPerson', { method: 'POST' })
     .then(res => { if (!res.ok) throw res.status; return res })
     .then(res => res.json())
-    .catch(err => console.error("Error fetching random person", err))
-  currentPersonSection.innerHTML = makeOnePersonSection(currentPerson);
+    .catch(err => console.error("Error fetching the next person", err));
+  currentPersonSection.innerHTML = currentPerson ? makeOnePersonSection(currentPerson) : "";
   refreshChosenPeople()
   refreshUnchosenPeople()
+  refreshPeopleToRevisit()
+}
+const revisitPersonLater = async () => {
+  await fetch('/person/revisit', { method: 'POST' })
+  .then(res => { if (!res.ok) throw res.status; return res })
+  .catch(err => console.error("Error sending the person to be revisited", err))
+  refreshPeopleToRevisit()
+  currentPersonSection.innerHTML = "";
 }
 const fetchUnchosenPeople = async () => await fetch('/people/unchosen')
   .then(res => { if (!res.ok) throw res.status; return res })
   .then(res => res.json())
   .catch(err => console.error("Error fetching unchosenpeople", err))
+
+const refreshUnchosenPeople = async () => {
+  const people = await fetchUnchosenPeople();
+  const html = people ? people.reduce((html, p) => html += makeOnePersonSection(p), "") : ""
+  unchosenPeopleSection.innerHTML = html;
+}
 
 const fetchChosenPeople = async () => await fetch('/people/chosen')
   .then(res => { if (!res.ok) throw res.status; return res })
@@ -46,14 +63,19 @@ const fetchChosenPeople = async () => await fetch('/people/chosen')
 
 const refreshChosenPeople = async () => {
   const people = await fetchChosenPeople();
-  const html = people.reduce((html, p) => html += makeOnePersonSection(p), "")
+  const html = people ? people.reduce((html, p) => html += makeOnePersonSection(p), "") : ""
   chosenPeopleSection.innerHTML = html;
 }
 
-const refreshUnchosenPeople = async () => {
-  const people = await fetchUnchosenPeople();
-  const html = people.reduce((html, p) => html += makeOnePersonSection(p), "")
-  unchosenPeopleSection.innerHTML = html;
+const fetchPeopleToRevisit = async () => await fetch('/people/revisit')
+  .then(res => { if (!res.ok) throw res.status; return res })
+  .then(res => res.json())
+  .catch(err => console.error("Error fetching chosenpeople", err))
+
+const refreshPeopleToRevisit = async () => {
+  const people = await fetchPeopleToRevisit();
+  const html = people ? people.reduce((html, p) => html += makeOnePersonSection(p), "") : ""
+  peopleToRevisitSection.innerHTML = html;
 }
 
 const makeOnePersonSection = (person) => `
