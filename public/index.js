@@ -28,6 +28,7 @@ const reset = async () => {
   refreshUnchosenPeople()
   refreshPeopleToRevisit()
 }
+
 const fetchNextPerson = async () => {
   const currentPerson = await fetch('/people/getNextPerson', { method: 'POST' })
     .then(res => { if (!res.ok) throw res.status; return res })
@@ -38,13 +39,15 @@ const fetchNextPerson = async () => {
   refreshUnchosenPeople()
   refreshPeopleToRevisit()
 }
+
 const revisitPersonLater = async () => {
   await fetch('/person/revisit', { method: 'POST' })
-  .then(res => { if (!res.ok) throw res.status; return res })
-  .catch(err => console.error("Error sending the person to be revisited", err))
+    .then(res => { if (!res.ok) throw res.status; return res })
+    .catch(err => console.error("Error sending the person to be revisited", err))
   refreshPeopleToRevisit()
   currentPersonSection.innerHTML = "";
 }
+
 const fetchUnchosenPeople = async () => await fetch('/people/unchosen')
   .then(res => { if (!res.ok) throw res.status; return res })
   .then(res => res.json())
