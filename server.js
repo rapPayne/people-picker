@@ -17,23 +17,26 @@ let peopleToRevisit = []
  * @returns The current/chosen random person
  */
 const getRandomPerson = () => {
-  if (personInSpotlight) {
-    chosenPeople = [...chosenPeople, personInSpotlight];
-  }
+  //removed the logic here that puts the spotlight person into chosen people list
   personInSpotlight = unchosenPeople[Math.floor(Math.random() * unchosenPeople.length)]
   unchosenPeople = unchosenPeople.filter(p => p !== personInSpotlight);
+
   return personInSpotlight;
 }
 const addPersonToRevisitList = () => {
   peopleToRevisit = [...peopleToRevisit, personInSpotlight]
-  personInSpotlight = undefined
+  personInSpotlight = getNextPerson()
+  return personInSpotlight;
 }
 const getNextPerson = () => {
   if(unchosenPeople.length){
     return getRandomPerson();
   }
-  const nextPersonToRevisit = peopleToRevisit.shift();
-  return nextPersonToRevisit;
+  if (peopleToRevisit.length){
+    return peopleToRevisit.shift();
+  }
+  return {};
+  //to-do: create logic to handle an empty object, signifying that both lists are empty
 }
 
 
@@ -58,6 +61,10 @@ app.get('/people/revisit', (req, res) => {
  * Resets chosenPeople to empty. Resets unchosenPeople to all people.
  */
 app.post('/people/reset', (req, res) => {
+  
+  //reset current person
+  personInSpotlight = undefined;
+
   chosenPeople = [];
   unchosenPeople = [...getAllPeople()];
   peopleToRevisit = [];
@@ -67,7 +74,16 @@ app.post('/people/reset', (req, res) => {
  * Calls getRandomPerson(). Notice that it changes personInSpotlight, chosenPeople, and unchosenPeople
  */
 app.post('/people/getNextPerson', (req, res) => {
+ 
+  /*This route is actually only used by the "pick person" button
+    That's why we're putting the current person in the chosen array
+    the revisit route has its own way of handling the "current person"
+  */
+  if (personInSpotlight){
+    chosenPeople = [...chosenPeople, personInSpotlight]
+  }
   const currentPerson = getNextPerson();
+
   console.log(currentPerson)
   res.send(currentPerson)
 })
@@ -79,9 +95,9 @@ app.post('/person/revisit', (req, res) => {
   if (!personInSpotlight) {
     res.status(400).send('There is no one in the spotlight to revisit.')
   } else {
-    console.log(`Revisit ${personInSpotlight} at the end.`);
+    console.log(`Revisit ${personInSpotlight.first} at the end.`);
     addPersonToRevisitList();
-    res.sendStatus(204); // No content.
+    res.status(200).send(personInSpotlight);
   }
 })
 
