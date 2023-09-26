@@ -2,6 +2,7 @@ let chosenPeopleSection
 let unchosenPeopleSection
 let peopleToRevisitSection
 let currentPersonSection
+let revisitButton;
 
 document.addEventListener('DOMContentLoaded', async () => {
   chosenPeopleSection = document.querySelector('section#chosen-people')
@@ -9,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   peopleToRevisitSection = document.querySelector('section#people-to-revisit')
   currentPersonSection = document.querySelector('section#current-person')
   let pickAPersonButton = document.querySelector('button#pick-a-person')
-  let revisitButton = document.querySelector('button#revisit')
+  revisitButton = document.querySelector('button#revisit')
   let resetButton = document.querySelector('button#reset')
 
   pickAPersonButton.addEventListener('click', () => fetchNextPerson())
@@ -24,6 +25,9 @@ const reset = async () => {
   await fetch('/people/reset', { method: 'POST' })
     .then(res => { if (!res.ok) throw res.status; return res })
     .catch(err => console.error("Error resetting the lists", err))
+  
+  currentPersonSection.innerHTML = "";
+  revisitButton.setAttribute("disabled", "");
   refreshChosenPeople()
   refreshUnchosenPeople()
   refreshPeopleToRevisit()
@@ -35,17 +39,22 @@ const fetchNextPerson = async () => {
     .then(res => res.json())
     .catch(err => console.error("Error fetching the next person", err));
   currentPersonSection.innerHTML = currentPerson ? makeOnePersonSection(currentPerson) : "";
+  revisitButton.removeAttribute("disabled");
   refreshChosenPeople()
   refreshUnchosenPeople()
   refreshPeopleToRevisit()
 }
 
 const revisitPersonLater = async () => {
-  await fetch('/person/revisit', { method: 'POST' })
-    .then(res => { if (!res.ok) throw res.status; return res })
-    .catch(err => console.error("Error sending the person to be revisited", err))
+  const currentPerson = await fetch('/person/revisit', { method: 'POST' })
+  .then(res => { if (!res.ok) throw res.status; return res })
+  .then(res => res.json())
+  .catch(err => console.error("Error sending the person to be revisited", err))
+
   refreshPeopleToRevisit()
-  currentPersonSection.innerHTML = "";
+  refreshUnchosenPeople()
+  currentPersonSection.innerHTML = currentPerson ? makeOnePersonSection(currentPerson) : console.log(currentPerson);
+ 
 }
 
 const fetchUnchosenPeople = async () => await fetch('/people/unchosen')
